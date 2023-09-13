@@ -38,7 +38,8 @@ public class ProductDaoImpl implements ProductDao {
 	@Override
 	public Product getProduct(int prodNo) throws Exception {
 		Product product = sqlSession.selectOne("ProductMapper.getProduct", prodNo);
-		product.setProTranCode(product.getProTranCode().trim());
+		if (product.getProTranCode() != null)
+			product.setProTranCode(product.getProTranCode().trim());
 		
 		return product;
 	}
@@ -76,11 +77,15 @@ public class ProductDaoImpl implements ProductDao {
 		map.put("startRowNum", (search.getCurrentPage()-1) * search.getPageSize() + 1);
 		map.put("endRowNum", search.getCurrentPage() * search.getPageSize());
 		
+		System.out.println("before");
 		List<Product> list = sqlSession.selectList("ProductMapper.getProductList", map);
+		System.out.println("after");
 		
 		for (int i = 0; i < list.size(); i++) {
-			list.get(i).setProTranCode(list.get(i).getProTranCode().trim());
+			if (list.get(i).getProTranCode() != null)
+				list.get(i).setProTranCode(list.get(i).getProTranCode().trim());
 		}
+		System.out.println("finish");
 		
 		return list;
 	}
@@ -116,11 +121,23 @@ public class ProductDaoImpl implements ProductDao {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("ProductMapper.getProdImgList", prodNo);
 	}
+	
+	@Override
+	public ProdImage getProdImage(int imgId) throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("ProductMapper.getProdImage", imgId);
+	}
 
 	@Override
 	public int removeProdImage(int imgId) throws Exception {
 		// TODO Auto-generated method stub
 		return sqlSession.delete("ProductMapper.removeProdImage", imgId);
+	}
+
+	@Override
+	public int getSeq_product_prod_no() throws Exception {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("ProductMapper.getSeq_product_prod_no");
 	}
 
 }

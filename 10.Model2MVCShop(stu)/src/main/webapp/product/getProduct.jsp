@@ -93,9 +93,16 @@
 		</td>
 		<td bgcolor="D6D6D6" width="1"></td>
 		<td class="ct_write01">
-			<c:forEach var="image" items="${ product.fileName.split(',') }">
-				<img src="/images/uploadFiles/${image}">
+			<table>
+			<tr>
+			<c:forEach var="image" items="${ product.imgList }">
+				<td>
+					<img width="300px" height="300px" src="/images/uploadFiles/${image.fileName}">
+					<input type="hidden" name="imgId" value="${ image.imgId }">
+				</td>
 			</c:forEach>
+			</tr>
+			</table>
 			
 		</td>
 	</tr>

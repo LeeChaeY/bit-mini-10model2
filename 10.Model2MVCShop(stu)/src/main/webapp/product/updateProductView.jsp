@@ -43,9 +43,18 @@ function fncUpdateProduct(){
 		alert("가격은 반드시 입력하셔야 합니다.");
 		return;
 	}
-	
-	alert($("input[name='file']").val());
 		
+	let imgDeleteList = $( ".ct_write01 input[type=button]");
+	let imgIdList = $( ".ct_write01 input[name='imgId']");
+	
+	let deleteImg = "";
+	for (let i=1; i<imgDeleteList.size(); i++) {
+		if ($(imgDeleteList[i]).val() == '삭제 취소') {
+			deleteImg += $(imgIdList[i]).val()+",";
+		}
+	}
+	$("input[name='deleteImg']").val(deleteImg);
+	
 	//document.detailForm.action='/product/updateProduct';
 	//document.detailForm.submit();
 	$("form").attr("method" , "POST").attr("enctype", "multipart/form-data").attr("action" , "/product/updateProduct").submit();
@@ -67,6 +76,11 @@ $(function() {
 
 	$( "img[src='../images/ct_icon_date.gif']" ).on("click" , function() {
 		show_calendar('document.forms[0].manuDate', $("td[name=manuDate]").val());
+	});
+	
+	$( ".ct_write01 input[type=button]" ).on("click" , function() {
+		if ($(this).val() == "삭제하기") $(this).val("삭제 취소");
+		else if ($(this).val() == "삭제 취소") $(this).val("삭제하기");
 	});
 });
 
@@ -100,6 +114,8 @@ $(function() {
 </table>
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 13px;">
+	<input type="hidden" name="fileName" value="${ product.fileName }">
+	<input type="hidden" name="deleteImg" value="">
 	<tr>
 		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
 	</tr>
@@ -170,10 +186,17 @@ $(function() {
 		<td width="104" class="ct_write">상품이미지</td>
 		<td bgcolor="D6D6D6" width="1"></td>
 		<td class="ct_write01">
-			<c:forEach var="image" items="${ product.fileName.split(',') }">
-				삭제하기
-				<img src="/images/uploadFiles/${image}">
+			<table>
+			<tr>
+			<c:forEach var="image" items="${ product.imgList }">
+				<td>
+					<div><input type="button" value="삭제하기"/></div>
+					<img width="300px" height="300px" src="/images/uploadFiles/${image.fileName}">
+					<input type="hidden" name="imgId" value="${ image.imgId }">
+				</td>
 			</c:forEach>
+			</tr>
+			</table>
 			<br>
 			<input	type="file" name="file" class="ct_input_g" 
 						style="width: 200px; height: 19px" maxLength="13" value="${ product.fileName }" multiple/>

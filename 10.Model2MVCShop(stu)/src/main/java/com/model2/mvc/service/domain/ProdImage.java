@@ -9,9 +9,8 @@ public class ProdImage {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ProdImage(int imgId, int prodNo, String fileName) {
+	public ProdImage(int prodNo, String fileName) {
 		super();
-		this.imgId = imgId;
 		this.prodNo = prodNo;
 		this.fileName = fileName;
 	}

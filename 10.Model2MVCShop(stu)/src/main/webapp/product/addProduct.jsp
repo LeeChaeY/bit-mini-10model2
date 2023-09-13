@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=EUC-KR"%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <html>
 <head>
 <title>상품등록</title>
@@ -110,7 +112,10 @@ $(function() {
 			<table border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="26">
-						<img src="/images/uploadFiles/${ product.fileName }">
+						<c:forEach var="image" items="${ product.imgList }">
+							<img src="/images/uploadFiles/${image.fileName}">
+							<input type="hidden" value="${ image.imgId }">
+						</c:forEach>
 					</td>
 				</tr>
 			</table>

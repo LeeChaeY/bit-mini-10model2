@@ -27,6 +27,10 @@ public interface ProductDao {
 	
 	public List<ProdImage> getProdImgList(int prodNo) throws Exception;
 	
+	public ProdImage getProdImage(int imgId) throws Exception;
+	
 	public int removeProdImage(int imgId) throws Exception;
+	
+	public int getSeq_product_prod_no() throws Exception;
 
 }

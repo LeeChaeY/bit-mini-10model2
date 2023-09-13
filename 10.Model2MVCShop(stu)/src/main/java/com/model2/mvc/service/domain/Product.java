@@ -1,6 +1,7 @@
 package com.model2.mvc.service.domain;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,7 +20,7 @@ public class Product {
 	// JSON ==> Domain Object  Binding을 위해 추가된 부분
 	private String regDateString;
 	
-	private List<ProdImage> imgList;
+	private List<ProdImage> imgList = new ArrayList<ProdImage>();
 	
 	public Product(){
 	}

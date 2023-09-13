@@ -1,8 +1,10 @@
 package com.model2.mvc.service.product;
 
+import java.util.List;
 import java.util.Map;
 
 import com.model2.mvc.common.Search;
+import com.model2.mvc.service.domain.ProdImage;
 import com.model2.mvc.service.domain.Product;
 
 public interface ProductService {
@@ -17,5 +19,9 @@ public interface ProductService {
 	public int removeProduct(int prodNo) throws Exception;
 	
 	public int removeProdImage(int imgId) throws Exception;
+	
+	public ProdImage getProdImage(int imgId) throws Exception;
+
+	List<ProdImage> getProdImgList(int prodNo) throws Exception;
 
 }

@@ -33,6 +33,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
+import com.model2.mvc.service.domain.ProdImage;
 import com.model2.mvc.service.domain.Product;
 import com.model2.mvc.service.product.ProductService;
 
@@ -77,26 +78,39 @@ public class ProductController {
 	public String addProduct( @RequestParam("file") List<MultipartFile> files, @ModelAttribute("product") Product product , Model model, 
 						HttpServletRequest request) throws Exception {
 			System.out.println("addProduct : POST : "+product);	
+			List<ProdImage> imgList = new ArrayList<ProdImage>();
 			
 			String fileNames =  "";
 			if (files.size() != 0) {
 	            try {
 	                // 업로드된 파일 저장
-	            	String uploadDir = "C:\\work\\03.git\\bit-mini-09model2\\09.Model2MVCShop(stu)\\src\\main\\\\webapp\\images\\uploadFiles\\";
+//	            	String uploadDir = "C:\\work\\03.git\\bit-mini-09model2\\09.Model2MVCShop(stu)\\src\\main\\\\webapp\\images\\uploadFiles\\";
+	            	String uploadDir = "F:\\git\\bit-mini-10model2\\10.Model2MVCShop(stu)\\src\\main\\webapp\\images\\uploadFiles\\";
 //	                String uploadDir = "\\images\\uploadFiles\\"; // 실제 경로로 변경해야 합니다.
 	            	for (int i=0; i<files.size(); i++) {
-	                File uploadFile = new File(uploadDir, files.get(i).getOriginalFilename());
-	                files.get(i).transferTo(uploadFile);
-	                
-	                fileNames += files.get(i).getOriginalFilename()+",";
+		                File uploadFile = new File(uploadDir, files.get(i).getOriginalFilename());
+		                files.get(i).transferTo(uploadFile);
+		                
+		                if (i == 0) product.setFileName(files.get(i).getOriginalFilename());
+		                System.out.println("iiiiiiiiiiiiiiiiiiiiiii"+i);
+		                
+		                imgList.add(new ProdImage(product.getProdNo(), files.get(i).getOriginalFilename()));
+		                
+		                //fileNames += files.get(i).getOriginalFilename()+",";
 	            	}
-	            	fileNames = fileNames.substring(0, fileNames.length()-1);
-	            	product.setFileName(fileNames);
-	                // 파일 업로드 성공 메시지 등을 처리하거나 다른 작업을 수행합니다.
+	            	//fileNames = fileNames.substring(0, fileNames.length()-1);
+	            	//product.setFileName(fileNames);
+	            	System.out.println("imgList"+imgList.size());
+            		product.setImgList(imgList);
+	            	
+	            	// 파일 업로드 성공 메시지 등을 처리하거나 다른 작업을 수행합니다.
 	                product.setManuDate(product.getManuDate().replace("-", ""));
+	                System.out.println("ssssssssssssss");
 	                
-	                productService.addProduct(product);
+	                int result = productService.addProduct(product);
+	                System.out.println("FFFFFFFFF: "+result);
 	    			model.addAttribute("product", product);
+	    			System.out.println("ssssssssssssss");
 	                
 	            } catch (Exception e) {
 	                e.printStackTrace();
@@ -110,77 +124,6 @@ public class ProductController {
 			
 		return "forward:/product/addProduct.jsp";
 	}
-	
-//	@RequestMapping(value="addProduct", method=RequestMethod.POST)
-//	public String addProduct( @ModelAttribute("product") Product product , Model model, HttpServletRequest request) throws Exception {
-//		System.out.println("addProduct : POST : "+product);
-//
-//		if (FileUpload.isMultipartContent(request)) {
-////			String temDir2 = "/image/uploadFiles/";
-//			String temDir2 = "C:\\work\\03.git\\bit-mini-09model2\\09.Model2MVCShop(stu)\\src\\main\\webapp\\images\\uploadFiles\\";
-//			
-////			product.setManuDate(product.getManuDate().replace("-", ""));
-//			
-//			System.out.println("addProduct : POST : "+product);
-//			
-//			DiskFileUpload fileUpload = new DiskFileUpload();
-//			fileUpload.setRepositoryPath(temDir2);
-//			fileUpload.setSizeMax(1024 * 1024 * 100);
-//			fileUpload.setSizeThreshold(1024 * 100);
-//			
-//			System.out.println(request.getContentLength()+", "+fileUpload.getSizeMax());
-//			if(request.getContentLength() < fileUpload.getSizeMax()) {
-//				StringTokenizer token = null;
-//				
-//				List fileItemList = fileUpload.parseRequest(request);
-//				int size = fileItemList.size();
-//				
-//				for (int i=0; i<size; i++) {
-//					FileItem fileItem = (FileItem)fileItemList.get(i);
-//					
-//					if(fileItem.isFormField()) {
-//						if(fileItem.getFieldName().equals("manuDate")) {
-//							token = new StringTokenizer(fileItem.getString("euc-kr"), "-");
-//							String manuDate = token.nextToken() + token.nextToken() + token.nextToken();
-//							product.setManuDate(manuDate);
-//						} 
-//						else if (fileItem.getFieldName().equals("prodName"))
-//							product.setProdName(fileItem.getString("euc-kr"));
-//						else if (fileItem.getFieldName().equals("prodDetail"))
-//							product.setProdDetail(fileItem.getString("euc-kr"));
-//						else if (fileItem.getFieldName().equals("price"))
-//							product.setPrice(Integer.parseInt(fileItem.getString("euc-kr")));
-//					} else {
-//						if (fileItem.getSize() > 0) {
-//							int idx = fileItem.getName().lastIndexOf("\\");
-//							if (idx == -1)
-//								idx =  fileItem.getName().lastIndexOf("/");
-//							String fileName = fileItem.getName().substring(idx + 1);
-//							product.setFileName(fileName);
-//							try {
-//								File uploadedFile = new File(temDir2, fileName);
-//								fileItem.write(uploadedFile);
-//							} catch (IOException e) {
-//								System.out.println(e);
-//							}
-//						} else {
-//							product.setFileName("../../images/empty.GIF");
-//						}
-//					}
-//				}
-//				productService.addProduct(product);
-//				model.addAttribute("product", product);
-//			} else {
-//				int overSize = (request.getContentLength() / 1000000);
-//				System.out.println("<scrpt>alert('파일의 크기는 1MB까지 입니다. 올리신 파일 용량은"
-//						+ overSize + "MB입니다');");
-//				System.out.println("history.back();</script>");
-//			}
-//		} else {
-//			System.out.println("인코딩 타입이 multipart/form-data가 아닙니다..");
-//		}
-//		return "forward:/product/addProduct.jsp";
-//	}
 	
 	@RequestMapping(value="getProduct", method=RequestMethod.GET )
 	public String getProduct(HttpServletRequest request, HttpServletResponse response,  
@@ -237,36 +180,59 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="updateProduct", method=RequestMethod.POST)
-	public String updateProduct( @RequestParam("file") List<MultipartFile> files, @ModelAttribute("product") Product product) throws Exception{
+	public String updateProduct( @RequestParam("file") List<MultipartFile> files, @ModelAttribute("product") Product product, @RequestParam("deleteImg") String deleteImg) throws Exception{
 		String menu = "search";
-		String fileNames = "";
 		
 		System.out.println("updateProduct : POST : "+product);
+		
+		String deleteDir = "F:\\git\\bit-mini-10model2\\10.Model2MVCShop(stu)\\src\\main\\webapp\\images\\uploadFiles\\";
+    	if (!deleteImg.equals("")) {
+    		for (String imgId : deleteImg.substring(0, deleteImg.length()).split(",")) {
+    			ProdImage img = productService.getProdImage(Integer.parseInt(imgId));
+    			productService.removeProdImage(Integer.parseInt(imgId));
+    			
+    			deleteDir = deleteDir + File.separator + img.getFileName();
+    			File fileToDelete = new File(deleteDir);
+    			
+    			// 파일을 삭제합니다.
+    	    	if (fileToDelete.exists()) {
+    	    	    if (fileToDelete.delete()) {
+    	    	        System.out.println("파일이 성공적으로 삭제되었습니다.");
+    	    	    } else {
+    	    	        System.out.println("파일을 삭제하는 데 문제가 발생했습니다.");
+    	    	    }
+    	    	}
+    		}
+    		
+    	}
 		
 		if (files.size() != 0) {
             try {
                 // 업로드된 파일 저장
-            	String uploadDir = "C:\\work\\03.git\\bit-mini-09model2\\09.Model2MVCShop(stu)\\src\\main\\\\webapp\\images\\uploadFiles\\";
-//                String uploadDir = "\\images\\uploadFiles\\"; // 실제 경로로 변경해야 합니다.
-                
-            	fileNames = productService.getProduct(product.getProdNo()).getFileName();
-            	if (fileNames == null) fileNames = "";
+//            	String uploadDir = "C:\\work\\03.git\\bit-mini-09model2\\09.Model2MVCShop(stu)\\src\\main\\\\webapp\\images\\uploadFiles\\";
+            	String uploadDir = "F:\\git\\bit-mini-10model2\\10.Model2MVCShop(stu)\\src\\main\\webapp\\images\\uploadFiles\\";
+//             String uploadDir = "\\images\\uploadFiles\\"; // 실제 경로로 변경해야 합니다.
+            	
+            	List<ProdImage> imgList = new ArrayList<ProdImage>();
             	
             	for (int i=0; i<files.size(); i++) {
+            		if (!files.get(i).getOriginalFilename().equals("")) {
 	                File uploadFile = new File(uploadDir, files.get(i).getOriginalFilename());
 	                files.get(i).transferTo(uploadFile);
 	                
-	                if (fileNames.equals("")) fileNames += files.get(i).getOriginalFilename()+",";
-	                else fileNames += "," + files.get(i).getOriginalFilename()+",";
-	            	}
-            		
-	            	fileNames = fileNames.substring(0, fileNames.length()-1);
-	            	product.setFileName(fileNames);
-	                // 파일 업로드 성공 메시지 등을 처리하거나 다른 작업을 수행합니다.
-	                product.setManuDate(product.getManuDate().replace("-", ""));
+//	                if (i == 0) product.setFileName(files.get(i).getOriginalFilename());
 	                
-	                //	Business Logic
-	        		productService.updateProduct(product);
+	                imgList.add(new ProdImage(product.getProdNo(), files.get(i).getOriginalFilename()));
+            		}
+	            }
+            	
+            	System.out.println("imgList.size() : "+imgList.size());
+        		product.setImgList(imgList);
+                // 파일 업로드 성공 메시지 등을 처리하거나 다른 작업을 수행합니다.
+                product.setManuDate(product.getManuDate().replace("-", ""));
+                
+                //	Business Logic
+        		productService.updateProduct(product);
                 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -300,7 +266,7 @@ public class ProductController {
 		System.out.println("listProduct : GET / POST : "+search);
 		System.out.println("listProduct : beginPrice : "+beginPrice+", endPrice : "+endPrice);
 		
-		if(search.getCurrentPage() ==0 ){
+		if(search.getCurrentPage() == 0 ){
 			search.setCurrentPage(1);
 		}
 		search.setPageSize(pageSize);

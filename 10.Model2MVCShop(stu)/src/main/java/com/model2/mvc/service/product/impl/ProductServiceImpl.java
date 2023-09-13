@@ -32,8 +32,13 @@ public class ProductServiceImpl implements ProductService{
 	public int addProduct(Product product) throws Exception {
 		int result = productDao.addProduct(product);
 		
-		for (ProdImage img : product.getImgList())
+		int prodNo = productDao.getSeq_product_prod_no();
+		product.setProdNo(prodNo);
+		
+		for (ProdImage img : product.getImgList()) {
+			img.setProdNo(prodNo);
 			productDao.addProdImage(img);
+		}
 		
 		return result;
 	}
@@ -61,8 +66,15 @@ public class ProductServiceImpl implements ProductService{
 		return map;
 	}
 
-	public int updateProduct(Product Product) throws Exception {
-		return productDao.updateProduct(Product);
+	public int updateProduct(Product product) throws Exception {
+		int result = productDao.updateProduct(product);
+		
+		for (ProdImage img : product.getImgList()) {
+			img.setProdNo(product.getProdNo());
+			productDao.addProdImage(img);
+		}
+		
+		return result;
 	}
 	
 	public int removeProduct(int prodNo) throws Exception {
@@ -71,8 +83,17 @@ public class ProductServiceImpl implements ProductService{
 
 	@Override
 	public int removeProdImage(int imgId) throws Exception {
-		// TODO Auto-generated method stub
 		return productDao.removeProdImage(imgId);
+	}
+	
+	@Override
+	public ProdImage getProdImage(int imgId) throws Exception {
+		return productDao.getProdImage(imgId);
+	}
+	
+	@Override
+	public List<ProdImage> getProdImgList(int prodNo) throws Exception {
+		return productDao.getProdImgList(prodNo);
 	}
 
 }

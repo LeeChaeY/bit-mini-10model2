@@ -39,7 +39,7 @@
   	<insert id="addProduct" parameterType="product">
 		INSERT 
 		INTO product (prod_no,prod_name,prod_detail,manufacture_day,price,image_file,reg_date) 
-		VALUES (			seq_product_prod_no.NEXTVAL, 
+		VALUES (			seq_product_prod_no.NEXTVAL,  
 								#{prodName}, 
 								#{prodDetail:VARCHAR}, 
 								#{manuDate:VARCHAR},  
@@ -47,6 +47,10 @@
 								#{fileName:VARCHAR}, 
 								SYSDATE )		
   	</insert>
+  	
+  	<select id="getSeq_product_prod_no" resultType="int">
+  		SELECT seq_product_prod_no.CURRVAL FROM dual
+  	</select>
   	
   	<select 	id="getProduct" parameterType="int" resultMap="productSelectMap">
 		SELECT P.*, tran_status_code AS pro_tran_code
@@ -149,6 +153,12 @@
 		SELECT img_id,prod_no,file_name
 		FROM  	prod_image
 		WHERE prod_no = #{prodNo}			
+  	</select>
+  	
+  	<select 	id="getProdImage" parameterType="int" resultMap="prodImgSelectMap">
+		SELECT img_id,prod_no,file_name
+		FROM  	prod_image
+		WHERE img_id = #{imgId}			
   	</select>
   	
   	<delete id="removeProdImage" parameterType="int">
