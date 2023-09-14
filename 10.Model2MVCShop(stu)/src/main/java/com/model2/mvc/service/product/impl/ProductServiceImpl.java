@@ -95,5 +95,8 @@ public class ProductServiceImpl implements ProductService{
 	public List<ProdImage> getProdImgList(int prodNo) throws Exception {
 		return productDao.getProdImgList(prodNo);
 	}
-
+	
+	public List<String> getProdNameList() throws Exception {
+		return productDao.getProdNameList();
+	}
 }

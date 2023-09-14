@@ -63,4 +63,11 @@ public class UserDaoImpl implements UserDao {
 		return sqlSession.selectOne("UserMapper.getTotalCount", search);
 	}
 
+	public List<String> getUserIdList() {
+		return sqlSession.selectList("UserMapper.getUserIdList");
+	}
+	
+	public List<String> getUserNameList() {
+		return sqlSession.selectList("UserMapper.getUserNameList");
+	}
 }

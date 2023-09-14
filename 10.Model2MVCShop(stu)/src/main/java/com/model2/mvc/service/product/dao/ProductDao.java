@@ -32,5 +32,7 @@ public interface ProductDao {
 	public int removeProdImage(int imgId) throws Exception;
 	
 	public int getSeq_product_prod_no() throws Exception;
+	
+	public List<String> getProdNameList() throws Exception;
 
 }

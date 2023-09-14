@@ -7,8 +7,12 @@
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
-<!-- CDN(Content Delivery Network) 호스트 사용 -->
-<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+ <link rel="stylesheet" href="/resources/demos/style.css">
+ <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+ <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
 <script type="text/javascript">
 //=====기존Code 주석 처리 후  jQuery 변경 ======//
@@ -22,6 +26,61 @@ function fncGetUserList(currentPage) {
 //===========================================//
 //==> 추가된부분 : "검색" ,  userId link  Event 연결 및 처리
  $(function() {
+	 let idList = {};
+	 let nameList = {};
+	 
+	 $.ajax( 
+				{
+					url : "/user/json/getUserAutocompleteList/user_id",
+					method : "GET",
+					dataType : "json" ,
+					headers : {
+						"Accept" : "application/json",
+						"Content-Type" : "application/json"
+					},
+					success : function(JSONData , status) {
+
+						//Debug...
+						//alert(status);
+						//Debug...
+						//alert("JSONData : \n"+JSONData);
+						
+						idList = JSONData;
+						$("input[name='searchKeyword']").autocomplete({
+						      source: idList
+					    });
+						$.ajax( 
+								{
+									url : "/user/json/getUserAutocompleteList/user_name",
+									method : "GET",
+									dataType : "json" ,
+									headers : {
+										"Accept" : "application/json",
+										"Content-Type" : "application/json"
+									},
+									success : function(JSONData , status) {
+
+										//Debug...
+										//alert(status);
+										//Debug...
+										//alert("JSONData : \n"+JSONData);
+										
+										nameList = JSONData;
+									},
+									error : function(status) {
+
+										//Debug...
+										alert("error");
+									}
+							});
+					},
+					error : function(status) {
+
+						//Debug...
+						alert("error");
+					}
+			});
+	 
 	 
 	//==> 검색 Event 연결처리부분
 	//==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
@@ -30,7 +89,7 @@ function fncGetUserList(currentPage) {
 		//Debug..
 		//alert(  $( "td.ct_btn01:contains('검색')" ).html() );
 		fncGetUserList(1);
-	});
+	  });
 	
 	
 	//==> userId LINK Event 연결처리
@@ -83,6 +142,18 @@ function fncGetUserList(currentPage) {
 	//==> 아래와 같이 정의한 이유는 ??
 	//==> 아래의 주석을 하나씩 풀어 가며 이해하세요.					
 	$(".ct_list_pop:nth-child(4n+6)" ).css("background-color" , "whitesmoke");
+	
+	$( "select[name='searchCondition']" ).on("change" , function() {
+		if ($(this).val() == "0") {
+			$("input[name='searchKeyword']").autocomplete({
+			      source: idList
+		    });
+		} else if ($(this).val() == "1") {
+			$("input[name='searchKeyword']").autocomplete({
+			      source: nameList
+		    });
+		}
+	});
 
 });	
 </script>

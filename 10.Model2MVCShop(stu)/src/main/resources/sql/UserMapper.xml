@@ -112,4 +112,14 @@
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
   	</select>
   	
+  	<select id="getUserIdList" resultType="string">
+  		SELECT distinct user_id
+  		FROM users
+  	</select>
+  	
+  	<select id="getUserNameList" resultType="string">
+  		SELECT distinct user_name
+  		FROM users
+  	</select>
+  	
 </mapper>

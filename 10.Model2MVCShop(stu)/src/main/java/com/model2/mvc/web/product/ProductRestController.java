@@ -278,4 +278,10 @@ public class ProductRestController {
 		
 		return map;
 	}
+	
+	@RequestMapping(value="json/getProdNameList", method=RequestMethod.GET )
+	public List<String> getProdNameList() throws Exception {
+		System.out.println("/product/json/getProdNameList : GET : ");
+		return productService.getProdNameList();
+	}
 }

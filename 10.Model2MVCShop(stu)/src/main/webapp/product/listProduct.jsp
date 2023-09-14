@@ -18,93 +18,17 @@
 
 	<link rel="stylesheet" href="/css/admin.css" type="text/css">
 	
-	<!-- CDN(Content Delivery Network) 호스트 사용 -->
-	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<meta charset="utf-8">
+	 <meta name="viewport" content="width=device-width, initial-scale=1">
+	 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+	 <link rel="stylesheet" href="/resources/demos/style.css">
+	 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+ 
 	<script type="text/javascript" src="../javascript/calendar.js">
 	</script>
 
 	<script type="text/javascript">
-	/*
-	window.onload = function() {
-		let td = document.getElementById("tdPrice");
-		let searchKeyword = document.getElementById("searchKeyword");
-		
-		if (document.detailForm.searchCondition.value == "2") {
-			td.style.display = "";
-			searchKeyword.style.display = "none";
-		} else if (document.detailForm.searchCondition.value == "1") {
-			td.style.display = "none";
-			searchKeyword.style.display = "";
-		}
-	}
-	
-	function fncGetProductList(currentPage, p){
-		p = typeof p != "undefined" ? p : 0;
-		
-		if (p) {
-			let se = document.detailForm.searchCondition;
-			let op = se.options[se.selectedIndex].value;
-	
-			if(op == "2") {
-				if (document.detailForm.beginPrice.value == "" || document.detailForm.endPrice.value == "") {
-					alert("금액 범위를 기입해야합니다.");
-					return false;
-				} else if (document.detailForm.beginPrice.value != "" && document.detailForm.endPrice.value != "" 
-								&& document.detailForm.beginPrice.value > document.detailForm.endPrice.value) {
-					alert("금액 범위가 잘못되었습니다.");
-					return false;
-				}
-			} else if (op == "1") {
-				if (document.detailForm.searchKeyword.value == "") {
-					alert("키워드를 기입해야합니다.");
-					return false;
-				}
-			} else {
-				alert("검색 분야를 기입해야합니다.");
-				return false;
-			}
-			
-			if (op == "1") {
-				document.detailForm.beginPrice.value="";
-				document.detailForm.endPrice.value="";
-				document.detailForm.searchKeyword.value = document.detailForm.searchKeyword.value;
-			} else if (op == "2") {
-				document.detailForm.searchKeyword.value = document.detailForm.beginPrice.value+","+document.detailForm.endPrice.value;
-			}
-		}
-		
-		document.detailForm.orderCondition.value = "0";
-		document.getElementById("currentPage").value = currentPage;
-		document.detailForm.submit();
-	}
-	
-	
-	function fncPriceRange() {
-		let td = document.getElementById("tdPrice");
-		let op = event.target.options[event.target.selectedIndex].value;
-		if (op == "2") {
-			td.style.display = "";
-			document.detailForm.searchKeyword.style.display = "none";
-		} else if (op == "0" || op == "1") {
-			td.style.display = "none";
-			document.detailForm.searchKeyword.style.display = "";
-		}
-	}
-	
-	function fncPriceOrder(currentPage) {
-		let se = document.detailForm.searchCondition;
-		let op = se.options[se.selectedIndex].value;
-		if (op == "1" || op == "2") {
-			document.getElementById("currentPage").value = currentPage;
-			
-			document.detailForm.searchKeyword.value = "${search.searchKeyword}";
-			document.detailForm.searchCondition.value = "${search.searchCondition}";
-			document.detailForm.beginPrice.value = "${beginPrice}";
-			document.detailForm.endPrice.value = "${endPrice}";
-			document.detailForm.submit();
-		}
-	}
-	*/
 	
 	function fncGetProductList(currentPage, p){
 		p = typeof p != "undefined" ? p : 0;
@@ -181,6 +105,34 @@
 			$("td.tdPrice").css("display", "none");
 			$("input[name='searchKeyword']").css("display", "");
 		}
+		
+		let list = {};
+		$.ajax( 
+				{
+					url : "/product/json/getProdNameList",
+					method : "GET",
+					dataType : "json" ,
+					headers : {
+						"Accept" : "application/json",
+						"Content-Type" : "application/json"
+					},
+					success : function(JSONData , status) {
+
+						//Debug...
+						//alert(status);
+						//Debug...
+						//alert("JSONData : \n"+JSONData);
+						list = JSONData;
+						$("input[name='searchKeyword']").autocomplete({
+						      source: list
+					    });
+					},
+					error : function(status) {
+
+						//Debug...
+						alert("error");
+					}
+			});
 		
 		
 		$("select[name='searchCondition']").on("click", function () {

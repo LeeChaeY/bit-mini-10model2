@@ -139,5 +139,9 @@ public class ProductDaoImpl implements ProductDao {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("ProductMapper.getSeq_product_prod_no");
 	}
+	
+	public List<String> getProdNameList() throws Exception {
+		return sqlSession.selectList("ProductMapper.getProdNameList");
+	}
 
 }

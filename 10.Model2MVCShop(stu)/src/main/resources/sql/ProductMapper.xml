@@ -167,4 +167,9 @@
   		WHERE img_id = #{imgId}
   	</delete>
   	
+  	<select id="getProdNameList" resultType="string">
+  		SELECT prod_name
+  		FROM product
+  	</select>
+  	
 </mapper>

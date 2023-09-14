@@ -1,6 +1,8 @@
 package com.model2.mvc.web.user;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -102,5 +104,21 @@ public class UserRestController {
 		map.put("userId", userId);
 
 		return map;
+	}
+	
+	@RequestMapping(value="json/getUserAutocompleteList/{query}", method=RequestMethod.GET)
+	public List<String> getUserAutocompleteList(@PathVariable String query) throws Exception{
+		
+		System.out.println("/user/json/getUserNameList : GET");
+		
+		List<String> list = new ArrayList<String>();
+		
+		if (query.equals("user_id")) {
+			list = userService.getUserIdList();
+		} else if (query.equals("user_name")) {
+			list = userService.getUserNameList();
+		}
+		
+		return list;
 	}
 }

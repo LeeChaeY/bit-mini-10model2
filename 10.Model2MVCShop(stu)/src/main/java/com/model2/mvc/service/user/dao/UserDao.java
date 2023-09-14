@@ -19,4 +19,8 @@ public interface UserDao {
 	public int removeUser(String userId) throws Exception;
 
 	public int getTotalCount(Search search) throws Exception;
+	
+	public List<String> getUserIdList() throws Exception;
+	
+	public List<String> getUserNameList() throws Exception;
 }
