@@ -197,14 +197,43 @@
 		
 		$(".ct_list_pop td:nth-child(3)").on("click", function () {
 			let j = Math.floor($(this).parent().index()/2)-1;
-			let prodNo = $(".productProdNo").eq(j).val();
+			let prodNo = $(".productObject").eq(2*j).val();
 			self.location = "/product/getProduct?prodNo="+prodNo+"&menu=${ menu }";
 		})
 		
-		$("td:contains('배송하기')").on("click", function () {
-			let j = Math.floor($(this).parent().index()/2)-1;
-			let prodNo = $(".productProdNo").eq(j).val();
-			self.location = "/purchase/updateTranCodeByProd?prodNo="+prodNo+"&tranCode=${list.get(i).proTranCode }&currentPage=${resultPage.currentPage}";
+		$(".ct_list_pop td:nth-child(9) input[type='button']").on("click", function () {
+			let j = Math.floor($(this).parent().parent().index()/2)-1;
+			let prodNo = $(".productObject").eq(2*j).val();
+			let proTranCode = $(".productObject").eq(2*j+1).val();
+			//alert($(".ct_list_pop td:nth-child(9)").eq(j).text());
+			let url = "/purchase/json/updateTranCodeByProd?prodNo="+prodNo+"&tranCode="+proTranCode+"&currentPage=${resultPage.currentPage}";
+			
+			$.ajax( 
+					{
+						url : url,
+						method : "GET" ,
+						dataType : "json" ,
+						headers : {
+							"Accept" : "application/json",
+							"Content-Type" : "application/json"
+						},
+						success : function(JSONData , status) {
+
+							//Debug...
+							//alert(status);
+							//Debug...
+							//alert("JSONData : \n"+JSONData);
+							
+							$(".ct_list_pop td:nth-child(9)").eq(j).text($(".ct_list_pop td:nth-child(9)").eq(j).text().trim());
+						},
+						error : function(status) {
+
+							//Debug...
+							alert("error");
+						}
+				});
+			
+			//self.location = "/purchase/updateTranCodeByProd?prodNo="+prodNo+"&tranCode=${list.get(i).proTranCode }&currentPage=${resultPage.currentPage}";
 		})
 		
 	});
@@ -338,6 +367,7 @@
 	<tr>
 		<td colspan="11" bgcolor="808285" height="1"></td>
 	</tr>
+	
 	<c:set var="i" value="0"></c:set>
 	<c:forEach var="product" items="${ list }">
 		<c:set var="i" value="${i+1}"/>
@@ -345,10 +375,11 @@
 			<td align="center">${ i }</td>
 			<td></td>
 			<td align="left">
+			<input class="productObject" style="display: none;" value="${product.prodNo}"/>
+			<input class="productObject" style="display: none;" value="${product.proTranCode}"/>
 				<!-- ////////////////// jQuery Event 처리로 변경됨 /////////////////////////
 				<a href="/product/getProduct?prodNo=${ product.prodNo }&menu=${ menu }">${ product.prodName }</a>
 				////////////////////////////////////////////////////////////////////////////////////////////////// -->
-				<input class="productProdNo" style="display: none;" value="${product.prodNo}"/>
 				${ product.prodName }
 			</td>
 			
@@ -385,7 +416,7 @@
 						<!-- ////////////////// jQuery Event 처리로 변경됨 /////////////////////////
 						<a href="/purchase/updateTranCodeByProd?prodNo=${ product.prodNo }&tranCode=${product.proTranCode }&currentPage=${resultPage.currentPage}">배송하기</a>
 						////////////////////////////////////////////////////////////////////////////////////////////////// -->
-						배송하기
+						<input type="button" value="배송하기"/>
 					</c:if>
 					<%-- <a href="/purchase/updateTranCodeByProd?prodNo=10001&tranCode=2">배송하기</a>
 					관리자에게만 보이는 것, 상품 관리에는 있음, 상품 검색에는 없음 

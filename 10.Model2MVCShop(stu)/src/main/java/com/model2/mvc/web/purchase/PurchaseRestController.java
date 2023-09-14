@@ -152,7 +152,7 @@ public class PurchaseRestController {
 	}
 	
 	@RequestMapping(value="json/updateTranCode", method=RequestMethod.GET )
-	public String updateTranCode(@RequestParam("tranNo") int tranNo, @RequestParam("currentPage") int currentPage, 
+	public Map updateTranCode(@RequestParam("tranNo") int tranNo, @RequestParam("currentPage") int currentPage, 
 			@RequestParam("tranCode") String tranCode) throws Exception{
 		Purchase purchase = new Purchase();
 		purchase.setTranNo(tranNo);
@@ -162,20 +162,27 @@ public class PurchaseRestController {
 		//Business Logic
 		purchaseService.updateTranCode(purchase);
 		
-		return "redirect:/purchase/listPurchase?currentPage="+currentPage;
+		Map map = new HashMap<>();
+		map.put("currentPage", currentPage);
+		
+		return map;
 	}
 	
 	@RequestMapping(value="json/updateTranCodeByProd", method=RequestMethod.GET )
-	public String updateTranCodeByProd(@RequestParam("prodNo") int prodNo, @RequestParam("currentPage") int currentPage, 
+	public Map updateTranCodeByProd(@RequestParam("prodNo") int prodNo, @RequestParam("currentPage") int currentPage, 
 			@RequestParam("tranCode") String tranCode) throws Exception{
 		Purchase purchase = new Purchase();
 		purchase.setPurchaseProd(new Product(prodNo));
 		purchase.setTranCode(tranCode);
-		System.out.println("/json/purchase/updateTranCodeByProd : GET : prodNo : "+prodNo+", tranCode : "+tranCode);
+		System.out.println("/json/purchase/updateTranCodeByProd : GET : prodNo : "+prodNo+", tranCode : "+tranCode +"currentPage : "+currentPage);
 		
 		//Business Logic
 		purchaseService.updateTranCode(purchase);
 		
-		return "redirect:/product/listProduct?menu=manage&currentPage="+currentPage;
+		Map map = new HashMap<>();
+		map.put("menu", "manage");
+		map.put("currentPage", currentPage);
+		
+		return map;
 	}
 }

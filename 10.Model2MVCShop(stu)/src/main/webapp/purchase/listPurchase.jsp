@@ -53,7 +53,34 @@
 			let j = Math.floor($(this).parent().index()/2)-1;
 			let tranNo = $(".purchaseObject").eq(3*j).val();
 			let tranCode = $(".purchaseObject").eq(3*j+2).val();
-			self.location = "/purchase/updateTranCode?tranNo="+tranNo+"&tranCode="+tranCode+"&currentPage=${resultPage.currentPage}";
+			//self.location = "/purchase/updateTranCode?tranNo="+tranNo+"&tranCode="+tranCode+"&currentPage=${resultPage.currentPage}";
+			
+			let url = "/purchase/json/updateTranCode?tranNo="+tranNo+"&tranCode="+tranCode+"&currentPage=${resultPage.currentPage}";
+			
+			$.ajax( 
+					{
+						url : url,
+						method : "GET" ,
+						dataType : "json" ,
+						headers : {
+							"Accept" : "application/json",
+							"Content-Type" : "application/json"
+						},
+						success : function(JSONData , status) {
+
+							//Debug...
+							//alert(status);
+							//Debug...
+							//alert("JSONData : \n"+JSONData);
+							
+							$(".ct_list_pop td:nth-child(11)").eq(j).text("");
+						},
+						error : function(status) {
+
+							//Debug...
+							alert("error");
+						}
+				});
 		});
 
 		$( "img[src='../images/ct_icon_date.gif']" ).on("click" , function() {
