@@ -39,7 +39,40 @@ function fncGetUserList(currentPage) {
 	$( ".ct_list_pop td:nth-child(3)" ).on("click" , function() {
 			//Debug..
 			//alert(  $( this ).text().trim() );
-			self.location ="/user/getUser?userId="+$(this).text().trim();
+			//////////////////////////// 추가 , 변경된 부분 ///////////////////////////////////
+					//self.location ="/user/getUser?userId="+$(this).text().trim();
+					////////////////////////////////////////////////////////////////////////////////////////////
+					var userId = $(this).text().trim();
+					$.ajax( 
+							{
+								url : "/user/json/getUser/"+userId ,
+								method : "GET" ,
+								dataType : "json" ,
+								headers : {
+									"Accept" : "application/json",
+									"Content-Type" : "application/json"
+								},
+								success : function(JSONData , status) {
+
+									//Debug...
+									//alert(status);
+									//Debug...
+									//alert("JSONData : \n"+JSONData);
+									
+									var displayValue = "<h3>"
+																+"아이디 : "+JSONData.userId+"<br/>"
+																+"이  름 : "+JSONData.userName+"<br/>"
+																+"이메일 : "+JSONData.email+"<br/>"
+																+"ROLE : "+JSONData.role+"<br/>"
+																+"등록일 : "+JSONData.regDateString+"<br/>"
+																+"</h3>";
+									//Debug...									
+									//alert(displayValue);
+									$("h3").remove();
+									$( "td[name='"+userId+"']" ).html(displayValue);
+								}
+						});
+						////////////////////////////////////////////////////////////////////////////////////////////
 	});
 	
 	//==> UI 수정 추가부분  :  userId LINK Event End User 에게 보일수 있도록 
@@ -50,13 +83,7 @@ function fncGetUserList(currentPage) {
 	//==> 아래와 같이 정의한 이유는 ??
 	//==> 아래의 주석을 하나씩 풀어 가며 이해하세요.					
 	$(".ct_list_pop:nth-child(4n+6)" ).css("background-color" , "whitesmoke");
-	//console.log ( $(".ct_list_pop:nth-child(1)" ).html() );
-	//console.log ( $(".ct_list_pop:nth-child(2)" ).html() );
-	//console.log ( $(".ct_list_pop:nth-child(3)" ).html() );
-	//console.log ( $(".ct_list_pop:nth-child(4)" ).html() ); //==> ok
-	//console.log ( $(".ct_list_pop:nth-child(5)" ).html() ); 
-	//console.log ( $(".ct_list_pop:nth-child(6)" ).html() ); //==> ok
-	//console.log ( $(".ct_list_pop:nth-child(7)" ).html() ); 
+
 });	
 </script>
 </head>
@@ -164,7 +191,10 @@ function fncGetUserList(currentPage) {
 			</td>		
 		</tr>
 		<tr>
+			<!-- //////////////////////////// 추가 , 변경된 부분 /////////////////////////////
 			<td colspan="11" bgcolor="D6D7D6" height="1"></td>
+			////////////////////////////////////////////////////////////////////////////////////////////  -->
+			<td name="${user.userId}" colspan="11" bgcolor="D6D7D6" height="1"></td>
 		</tr>
 	</c:forEach>
 </table>

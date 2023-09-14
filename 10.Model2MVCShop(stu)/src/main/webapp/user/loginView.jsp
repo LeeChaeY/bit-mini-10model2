@@ -55,13 +55,50 @@
 					return;
 				}
 				
-				//$("form").attr("method" , "POST");
-				//$("form").attr("action" , "/login.do");
-				//$("form").attr("target" , "_parent");
-			    //$("form").submit();
-				//==> 위의 4실행문과 같은의미			    
-				$("form").attr("method","POST").attr("action","/user/login").attr("target","_parent").submit();
-				
+//////////////////////////////////////////////////추가 , 변경된 부분 ////////////////////////////////////////////////////////////
+				//$("form").attr("method","POST").attr("action","/user/login").attr("target","_parent").submit();
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				$.ajax( 
+						{
+							url : "/user/json/login",
+							method : "POST" ,
+							dataType : "json" ,
+							headers : {
+								"Accept" : "application/json",
+								"Content-Type" : "application/json"
+							},
+							data : JSON.stringify({
+								userId : id,
+								password : pw
+							}),
+							success : function(JSONData , status) {
+
+								//Debug...
+								//alert(status);
+								//alert("JSONData : \n"+JSONData);
+								//alert( "JSON.stringify(JSONData) : \n"+JSON.stringify(JSONData) );
+								//alert( JSONData != null );
+								
+								if( JSONData != null ){
+									//[방법1]
+									//$(window.parent.document.location).attr("href","/index.jsp");
+									
+									//[방법2]
+									//window.parent.document.location.reload();
+									
+									//[방법3]
+									$(window.parent.frames["topFrame"].document.location).attr("href","/layout/top.jsp");
+									$(window.parent.frames["leftFrame"].document.location).attr("href","/layout/left.jsp");
+									$(window.parent.frames["rightFrame"].document.location).attr("href","/user/getUser?userId="+JSONData.userId);
+									
+									//==> 방법 1 , 2 , 3 결과 학인
+								}else{
+									alert("아이디 , 패스워드를 확인하시고 다시 로그인...");
+								}
+							}
+					}); 
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					
 			});
 		});
 		

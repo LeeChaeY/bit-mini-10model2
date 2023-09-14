@@ -142,7 +142,6 @@
 			}
 		}
 		
-		$("select[name='orderCondition']").val("0");
 		$("input[name='currentPage']").val(currentPage);
 		
 		$("form").attr("method", "post").attr("action", "/product/listProduct").submit();
