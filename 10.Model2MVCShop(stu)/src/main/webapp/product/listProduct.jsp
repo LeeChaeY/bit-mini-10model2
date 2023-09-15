@@ -188,6 +188,29 @@
 			//self.location = "/purchase/updateTranCodeByProd?prodNo="+prodNo+"&tranCode=${list.get(i).proTranCode }&currentPage=${resultPage.currentPage}";
 		})
 		
+		function loadMoreContent() {
+		  // Ajax 요청을 보내서 추가 콘텐츠를 가져옴
+		  $.ajax({
+			    url: '/product/json/listProduct',
+			    method: 'POST',
+			    data: { "search":{"currentPage":"${resultPage.currentPage+1}"},
+			    		"menu":"${menu}", 
+			    		"beginPrice":"", 
+			    		"endPrice":""}, 
+			    success: function(response) {
+			      // 서버에서 받은 데이터를 화면에 추가
+			      $('table').eq(1).append(response);
+			      nextPage++; // 다음 페이지를 로드하기 위한 페이지 번호 업데이트
+		    	}
+	 		 });
+		}
+		$(window).scroll(function() {
+			  if ($(window).scrollTop() + $(window).height() >= $('table').eq(1).height()) {
+			    // 스크롤이 페이지 하단에 도달하면 추가 콘텐츠를 로드
+			    loadMoreContent();
+			  }
+		});
+		
 	});
 	
 </script>
@@ -383,7 +406,7 @@
 		</tr>	
 	</c:forEach>
 </table>
-
+<!-- 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
 	<tr>
 		<td align="center">
@@ -394,6 +417,7 @@
 		</td>
 	</tr>
 </table>
+ -->
 <!--  페이지 Navigator 끝 -->
 
 </form>

@@ -121,4 +121,36 @@ public class UserRestController {
 		
 		return list;
 	}
+	
+	@RequestMapping(value="json/listUser")
+	public Map listUser( @RequestBody Search search) throws Exception{
+		
+		System.out.println("-------------------------------------------/user/json/listUser: GET / POST");
+		System.out.println(search);
+		
+		if(search.getCurrentPage() ==0 ){
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		
+		String searchKeyword = null;
+		if(search.getSearchKeyword() != null && !search.getSearchKeyword().equals(""))
+			searchKeyword = search.getSearchKeyword();
+		
+		// Business logic 수행
+		Map<String , Object> map=userService.getUserList(search);
+		
+		if(search.getSearchKeyword() != null && !search.getSearchKeyword().equals(""))
+			search.setSearchKeyword(searchKeyword);
+		
+		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
+		System.out.println("ListUserAction ::"+resultPage);
+		
+		// Model 과 View 연결
+		Map<String , Object> map01 = new HashMap<String, Object>();
+		map01.put("list", map.get("list"));
+//		map.put("search", search);
+		
+		return map01;
+	}
 }

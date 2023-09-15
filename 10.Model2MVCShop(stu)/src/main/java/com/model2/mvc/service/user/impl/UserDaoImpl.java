@@ -54,6 +54,9 @@ public class UserDaoImpl implements UserDao {
 		map.put("startRowNum", (search.getCurrentPage()-1) * search.getPageSize() + 1);
 		map.put("endRowNum", search.getCurrentPage() * search.getPageSize());
 		
+		System.out.println("---------------------------------startRowNum"+((search.getCurrentPage()-1) * search.getPageSize() + 1));
+		System.out.println("-------------------------------endRowNum"+ (search.getCurrentPage() * search.getPageSize()));
+		
 		return sqlSession.selectList("UserMapper.getUserList", map);
 	}
 	

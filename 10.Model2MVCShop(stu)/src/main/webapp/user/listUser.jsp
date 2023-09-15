@@ -28,6 +28,7 @@ function fncGetUserList(currentPage) {
  $(function() {
 	 let idList = {};
 	 let nameList = {};
+	 //let currPage = 1;
 	 
 	 $.ajax( 
 				{
@@ -154,6 +155,62 @@ function fncGetUserList(currentPage) {
 		    });
 		}
 	});
+	
+	function loadMoreContent() {
+		  // Ajax 요청을 보내서 추가 콘텐츠를 가져옴
+		  let currPage = ${resultPage.currentPage};
+		  //alert(currPage);
+		  $.ajax({
+			    url: '/user/json/listUser',
+			    method: 'POST',
+			    dataType : "json" ,
+			    headers : {
+					"Accept" : "application/json",
+					"Content-Type" : "application/json"
+				},
+				data : JSON.stringify( {currentPage:currPage}),
+			    success: function(data) {
+			      // 서버에서 받은 데이터를 화면에 추가
+			      //alert(response);
+			      
+			      //alert(data.userId);
+			     let value = "<tr class='ct_list_pop'>"
+			     +"<td align='center'>${i}</td>"
+				 +"<td></td>"
+				 +"<td align='left'>"
+				 +"${user.userId}"		
+				 +"</td>"
+				 +"<td></td>"
+				 +"<td align='left'>${ user.userName }</td>"
+				 +"<td></td>"
+				 +"<td align='left'>${ user.email }</td>"
+				 +"</tr>"
+				 +"<tr>"
+				 +"<td name='${user.userId}' colspan='11' bgcolor='D6D7D6' height='1'></td>"
+				 +"</tr>";
+				 
+			      $('table').eq(4).append(value);
+			      console.log(currPage);
+			      //console.log(value);
+			      //console(value);
+			      currPage++;
+			      //${resultPage.currentPage} = currPage;
+		    	}, 
+		    	error:function() {
+		    		alert("error");
+		    	}
+	 		 });
+		}
+		$(window).scroll(function() {
+			//currPage= ${resultPage.currentPage}+1;
+			  //if ($(window).scrollTop() + $(window).height() >= $('table').eq(4).height()) {
+			  if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+			    // 스크롤이 페이지 하단에 도달하면 추가 콘텐츠를 로드
+			   // if (resultPage.currentPage <= resultPage.maxPage) {
+			    	//loadMoreContent();
+			   // }
+			  }
+		});
 
 });	
 </script>
@@ -270,6 +327,7 @@ function fncGetUserList(currentPage) {
 	</c:forEach>
 </table>
 
+<!-- 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
 	<tr>
 		<td align="center">
@@ -280,6 +338,7 @@ function fncGetUserList(currentPage) {
     	</td>
 	</tr>
 </table>
+ -->
 <!--  페이지 Navigator 끝 -->
 </form>
 </div>
